@@ -127,4 +127,3 @@ class Linear(hk.Module):
       output += bias
 
     return output
-
