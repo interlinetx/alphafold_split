@@ -91,4 +91,4 @@ RUN echo $'#!/bin/bash\n\
 ldconfig\n\
 python /app/alphafold/run_alphafold.py "$@"' > /app/run_alphafold.sh \
   && chmod +x /app/run_alphafold.sh
-ENTRYPOINT ["/app/run_alphafold.sh"]
+# ENTRYPOINT ["/app/run_alphafold.sh"]
