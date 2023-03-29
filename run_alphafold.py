@@ -360,7 +360,7 @@ def main(argv):
           uniref90_database_path=FLAGS.uniref90_database_path,
           mgnify_database_path=FLAGS.mgnify_database_path,
           bfd_database_path=FLAGS.bfd_database_path,
-          uniclust30_database_path=FLAGS.uniclust30_database_path,
+          uniref30_database_path=FLAGS.uniref30_database_path,
           small_bfd_database_path=FLAGS.small_bfd_database_path,
           template_searcher=template_searcher,
           template_featurizer=template_featurizer,

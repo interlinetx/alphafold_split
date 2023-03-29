@@ -41,14 +41,14 @@ logging.set_verbosity(logging.INFO)
 
 flags.DEFINE_list(
     'fasta_paths', None, 'Paths to FASTA files, each containing a prediction '
-    'target that will be folded one after another. If a FASTA file contains '
-    'multiple sequences, then it will be folded as a multimer. Paths should be '
-    'separated by commas. All FASTA paths must have a unique basename as the '
-    'basename is used to name the output directories for each prediction.')
+                         'target that will be folded one after another. If a FASTA file contains '
+                         'multiple sequences, then it will be folded as a multimer. Paths should be '
+                         'separated by commas. All FASTA paths must have a unique basename as the '
+                         'basename is used to name the output directories for each prediction.')
 
 flags.DEFINE_string('data_dir', None, 'Path to directory of supporting data.')
 flags.DEFINE_string('output_dir', None, 'Path to a directory that will '
-                    'store the results.')
+                                        'store the results.')
 flags.DEFINE_string('jackhmmer_binary_path', shutil.which('jackhmmer'),
                     'Path to the JackHMMER executable.')
 flags.DEFINE_string('hhblits_binary_path', shutil.which('hhblits'),
@@ -62,28 +62,28 @@ flags.DEFINE_string('hmmbuild_binary_path', shutil.which('hmmbuild'),
 flags.DEFINE_string('kalign_binary_path', shutil.which('kalign'),
                     'Path to the Kalign executable.')
 flags.DEFINE_string('uniref90_database_path', None, 'Path to the Uniref90 '
-                    'database for use by JackHMMER.')
+                                                    'database for use by JackHMMER.')
 flags.DEFINE_string('mgnify_database_path', None, 'Path to the MGnify '
-                    'database for use by JackHMMER.')
+                                                  'database for use by JackHMMER.')
 flags.DEFINE_string('bfd_database_path', None, 'Path to the BFD '
-                    'database for use by HHblits.')
+                                               'database for use by HHblits.')
 flags.DEFINE_string('small_bfd_database_path', None, 'Path to the small '
-                    'version of BFD used with the "reduced_dbs" preset.')
-flags.DEFINE_string('uniclust30_database_path', None, 'Path to the Uniclust30 '
-                    'database for use by HHblits.')
+                                                     'version of BFD used with the "reduced_dbs" preset.')
+flags.DEFINE_string('uniref30_database_path', None, 'Path to the UniRef30 '
+                                                    'database for use by HHblits.')
 flags.DEFINE_string('uniprot_database_path', None, 'Path to the Uniprot '
-                    'database for use by JackHMMer.')
+                                                   'database for use by JackHMMer.')
 flags.DEFINE_string('pdb70_database_path', None, 'Path to the PDB70 '
-                    'database for use by HHsearch.')
+                                                 'database for use by HHsearch.')
 flags.DEFINE_string('pdb_seqres_database_path', None, 'Path to the PDB '
-                    'seqres database for use by hmmsearch.')
+                                                      'seqres database for use by hmmsearch.')
 flags.DEFINE_string('template_mmcif_dir', None, 'Path to a directory with '
-                    'template mmCIF structures, each named <pdb_id>.cif')
+                                                'template mmCIF structures, each named <pdb_id>.cif')
 flags.DEFINE_string('max_template_date', None, 'Maximum template release date '
-                    'to consider. Important if folding historical test sets.')
+                                               'to consider. Important if folding historical test sets.')
 flags.DEFINE_string('obsolete_pdbs_path', None, 'Path to file containing a '
-                    'mapping from obsolete PDB IDs to the PDB IDs of their '
-                    'replacements.')
+                                                'mapping from obsolete PDB IDs to the PDB IDs of their '
+                                                'replacements.')
 flags.DEFINE_enum('db_preset', 'full_dbs',
                   ['full_dbs', 'reduced_dbs'],
                   'Choose preset MSA database configuration - '
@@ -101,43 +101,41 @@ MAX_TEMPLATE_HITS = 20
 def _check_flag(flag_name: str,
                 other_flag_name: str,
                 should_be_set: bool):
-  if should_be_set != bool(FLAGS[flag_name].value):
-    verb = 'be' if should_be_set else 'not be'
-    raise ValueError(f'{flag_name} must {verb} set when running with '
-                     f'"--{other_flag_name}={FLAGS[other_flag_name].value}".')
+    if should_be_set != bool(FLAGS[flag_name].value):
+        verb = 'be' if should_be_set else 'not be'
+        raise ValueError(f'{flag_name} must {verb} set when running with '
+                         f'"--{other_flag_name}={FLAGS[other_flag_name].value}".')
 
 
 def compute_msa(
-    fasta_path: str,
-    fasta_name: str,
-    output_dir_base: str,
-    data_pipeline: Union[pipeline.DataPipeline, pipeline_multimer.DataPipeline]):
-  """ Prepare MSAs for AF2 predictions."""
-  logging.info('Computing MSA for %s', fasta_name)
-  timings = {}
-  output_dir = os.path.join(output_dir_base, fasta_name)
-  if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-  msa_output_dir = os.path.join(output_dir, 'msas')
-  if not os.path.exists(msa_output_dir):
-    os.makedirs(msa_output_dir)
+        fasta_path: str,
+        fasta_name: str,
+        output_dir_base: str,
+        data_pipeline: Union[pipeline.DataPipeline, pipeline_multimer.DataPipeline]):
+    """ Prepare MSAs for AF2 predictions."""
+    logging.info('Computing MSA for %s', fasta_name)
+    timings = {}
+    output_dir = os.path.join(output_dir_base, fasta_name)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    msa_output_dir = os.path.join(output_dir, 'msas')
+    if not os.path.exists(msa_output_dir):
+        os.makedirs(msa_output_dir)
 
-  t_0 = time.time()
-  feature_dict = data_pipeline.process(
-      input_fasta_path=fasta_path,
-      msa_output_dir=msa_output_dir)
-  timings['features'] = time.time() - t_0
+    t_0 = time.time()
+    feature_dict = data_pipeline.process(
+        input_fasta_path=fasta_path,
+        msa_output_dir=msa_output_dir)
+    timings['features'] = time.time() - t_0
 
-  # Write out features as a pickled dictionary.
-  features_output_path = os.path.join(output_dir, 'features.pkl')
-  with open(features_output_path, 'wb') as f:
-    pickle.dump(feature_dict, f, protocol=4)
+    # Write out features as a pickled dictionary.
+    features_output_path = os.path.join(output_dir, 'features.pkl')
+    with open(features_output_path, 'wb') as f:
+        pickle.dump(feature_dict, f, protocol=4)
 
-  timings_output_path = os.path.join(output_dir, 'timings.json')
-  with open(timings_output_path, 'w') as f:
-    f.write(json.dumps(timings, indent=4))
-
-
+    timings_output_path = os.path.join(output_dir, 'timings.json')
+    with open(timings_output_path, 'w') as f:
+        f.write(json.dumps(timings, indent=4))
 
 
 def main(argv):
@@ -145,25 +143,25 @@ def main(argv):
         raise app.UsageError('Too many command-line arguments.')
 
     for tool_name in (
-      'jackhmmer', 'hhblits', 'hhsearch', 'hmmsearch', 'hmmbuild', 'kalign'):
+            'jackhmmer', 'hhblits', 'hhsearch', 'hmmsearch', 'hmmbuild', 'kalign'):
         if not FLAGS[f'{tool_name}_binary_path'].value:
-          raise ValueError(f'Could not find path to the "{tool_name}" binary. Make '
-                           'sure it is installed on your system.')
+            raise ValueError(f'Could not find path to the "{tool_name}" binary. Make '
+                             'sure it is installed on your system.')
 
     use_small_bfd = FLAGS.db_preset == 'reduced_dbs'
     _check_flag('small_bfd_database_path', 'db_preset',
-              should_be_set=use_small_bfd)
+                should_be_set=use_small_bfd)
     _check_flag('bfd_database_path', 'db_preset',
-              should_be_set=not use_small_bfd)
-    _check_flag('uniclust30_database_path', 'db_preset',
-              should_be_set=not use_small_bfd)
+                should_be_set=not use_small_bfd)
+    _check_flag('uniref30_database_path', 'db_preset',
+                should_be_set=not use_small_bfd)
     run_multimer_system = 'multimer' in FLAGS.model_preset
     _check_flag('pdb70_database_path', 'model_preset',
-              should_be_set=not run_multimer_system)
+                should_be_set=not run_multimer_system)
     _check_flag('pdb_seqres_database_path', 'model_preset',
-              should_be_set=run_multimer_system)
+                should_be_set=run_multimer_system)
     _check_flag('uniprot_database_path', 'model_preset',
-              should_be_set=run_multimer_system)
+                should_be_set=run_multimer_system)
     # Check for duplicate FASTA file names.
     fasta_names = [pathlib.Path(p).stem for p in FLAGS.fasta_paths]
     if len(fasta_names) != len(set(fasta_names)):
@@ -194,16 +192,16 @@ def main(argv):
             obsolete_pdbs_path=FLAGS.obsolete_pdbs_path)
 
     monomer_data_pipeline = pipeline.DataPipeline(
-      jackhmmer_binary_path=FLAGS.jackhmmer_binary_path,
-      hhblits_binary_path=FLAGS.hhblits_binary_path,
-      uniref90_database_path=FLAGS.uniref90_database_path,
-      mgnify_database_path=FLAGS.mgnify_database_path,
-      bfd_database_path=FLAGS.bfd_database_path,
-      uniclust30_database_path=FLAGS.uniclust30_database_path,
-      small_bfd_database_path=FLAGS.small_bfd_database_path,
-      template_searcher=template_searcher,
-      template_featurizer=template_featurizer,
-      use_small_bfd=use_small_bfd)
+        jackhmmer_binary_path=FLAGS.jackhmmer_binary_path,
+        hhblits_binary_path=FLAGS.hhblits_binary_path,
+        uniref90_database_path=FLAGS.uniref90_database_path,
+        mgnify_database_path=FLAGS.mgnify_database_path,
+        bfd_database_path=FLAGS.bfd_database_path,
+        uniref30_database_path=FLAGS.uniref30_database_path,
+        small_bfd_database_path=FLAGS.small_bfd_database_path,
+        template_searcher=template_searcher,
+        template_featurizer=template_featurizer,
+        use_small_bfd=use_small_bfd)
 
     if run_multimer_system:
         data_pipeline = pipeline_multimer.DataPipeline(
@@ -216,22 +214,21 @@ def main(argv):
     for i, fasta_path in enumerate(FLAGS.fasta_paths):
         fasta_name = fasta_names[i]
         compute_msa(
-        fasta_path=fasta_path,
-        fasta_name=fasta_name,
-        output_dir_base=FLAGS.output_dir,
-        data_pipeline=data_pipeline)
-
+            fasta_path=fasta_path,
+            fasta_name=fasta_name,
+            output_dir_base=FLAGS.output_dir,
+            data_pipeline=data_pipeline)
 
 
 if __name__ == '__main__':
-  flags.mark_flags_as_required([
-      'fasta_paths',
-      'output_dir',
-      'data_dir',
-      'uniref90_database_path',
-      'mgnify_database_path',
-      'template_mmcif_dir',
-      'max_template_date',
-      'obsolete_pdbs_path'  ])
+    flags.mark_flags_as_required([
+        'fasta_paths',
+        'output_dir',
+        'data_dir',
+        'uniref90_database_path',
+        'mgnify_database_path',
+        'template_mmcif_dir',
+        'max_template_date',
+        'obsolete_pdbs_path'])
 
-  app.run(main)
+    app.run(main)
