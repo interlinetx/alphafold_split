@@ -13,4 +13,4 @@ Miniconda with the `CONDARCH` Docker build arg:
 
 Use Docker's buildx capability to 
 
-` docker buildx build -f docker/Dockerfile-msa --platform linux/amd64 --push -t 056117122700.dkr.ecr.us-west-2.amazonaws.com/alphafold-split .`
+` docker buildx build -f docker/Dockerfile-msa --platform linux/amd64 --network host --push -t 056117122700.dkr.ecr.us-west-2.amazonaws.com/alphafold-split:latest .`

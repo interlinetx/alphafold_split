@@ -89,6 +89,7 @@ flags.DEFINE_boolean('use_gpu_relax', None, 'Whether to relax on GPU. '
                      'recommended to enable if possible. GPUs must be available'
                      ' if this setting is enabled.')
 flags.DEFINE_string('msa_path', None, 'Path to the MSA feature files')
+flags.DEFINE_integer('num_recycle', 20, 'Number of recycles for multimer runs. ')
 
 
 FLAGS = flags.FLAGS
@@ -246,6 +247,9 @@ def main(argv):
         model_config = config.model_config(model_name)
         if run_multimer_system:
             model_config.model.num_ensemble_eval = num_ensemble
+            model_config.num_recycle = FLAGS.num_recycle
+            if FLAGS.use_templates is not None:
+                model_config.common.use_templates = FLAGS.use_templates
         else:
             model_config.data.eval.num_ensemble = num_ensemble
         model_params = data.get_model_haiku_params(
