@@ -90,6 +90,7 @@ flags.DEFINE_boolean('use_gpu_relax', None, 'Whether to relax on GPU. '
                      ' if this setting is enabled.')
 flags.DEFINE_string('msa_path', None, 'Path to the MSA feature files')
 flags.DEFINE_integer('num_recycle', 20, 'Number of recycles for multimer runs. ')
+flags.DEFINE_boolean('use_templates', None, 'Use templates. ')
 
 
 FLAGS = flags.FLAGS
