@@ -250,7 +250,7 @@ def main(argv):
             model_config.model.num_ensemble_eval = num_ensemble
             model_config.num_recycle = FLAGS.num_recycle
             if FLAGS.use_templates is not None:
-                model_config.common.use_templates = FLAGS.use_templates
+                model_config.data.common.use_templates = FLAGS.use_templates
         else:
             model_config.data.eval.num_ensemble = num_ensemble
         model_params = data.get_model_haiku_params(
